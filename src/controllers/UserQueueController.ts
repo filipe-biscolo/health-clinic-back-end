@@ -6,7 +6,7 @@ import UserQueue from "../models/UserQueue";
 
 import jwt from "jsonwebtoken";
 import jwt_decode from "jwt-decode";
-import { G_CLIENT, JWT_SECRET } from "../config/env_config";
+import { G_CLIENT, JWT_SECRET, APP_ANGULAR } from "../config/env_config";
 
 import * as nodemailer from "nodemailer";
 import config from "../config/mail_config";
@@ -53,7 +53,7 @@ export default {
     const message = `
         <h4>Confime seu cadastro no Health Clinic</h4>
         <p>Clique no link abaixo para confirmar o seu cadastro</p>
-        <a href="http://localhost:4200/signup/form?email=${email}&code=${code}">Confirmar cadastro</a>`;
+        <a href="${APP_ANGULAR}/signup/form?email=${email}&code=${code}">Confirmar cadastro</a>`;
 
     const mailOptions = {
       from: "filipe.biscolo@gmail.com",
@@ -214,7 +214,7 @@ export default {
     const message = `
         <h4>Confime seu cadastro no Health Clinic</h4>
         <p>Clique no link abaixo para confirmar o seu cadastro</p>
-        <a href="http://localhost:4200/signup/form?email=${email}&code=${code}">Confirmar cadastro</a>`;
+        <a href="${APP_ANGULAR}/signup/form?email=${email}&code=${code}">Confirmar cadastro</a>`;
 
     const mailOptions = {
       from: "filipe.biscolo@gmail.com",

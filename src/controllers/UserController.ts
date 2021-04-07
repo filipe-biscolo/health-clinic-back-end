@@ -8,7 +8,7 @@ import {Professional} from "../models/Professional";
 import UserForgot from "../models/UserForgot";
 
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/env_config";
+import { JWT_SECRET, APP_ANGULAR } from "../config/env_config";
 
 import * as nodemailer from "nodemailer";
 import config from "../config/mail_config";
@@ -195,7 +195,7 @@ export default {
     const message = `
     <h4>Confime seu pedido de recuperação de senha no Health Clinic</h4>
     <p>Clique no link abaixo para recuperar a sua senha</p>
-    <a href="http://localhost:4200/forgot-password/new?email=${email}&code=${code}">Recuperar senha</a>`;
+    <a href="${APP_ANGULAR}/forgot-password/new?email=${email}&code=${code}">Recuperar senha</a>`;
 
     const mailOptions = {
       from: "filipe.biscolo@gmail.com",
@@ -260,7 +260,7 @@ export default {
     const message = `
   <h4>Confime seu pedido de recuperação de senha no Health Clinic</h4>
   <p>Clique no link abaixo para recuperar a sua senha</p>
-  <a href="http://localhost:4200/forgot-password/new?email=${email}&code=${code}">Recuperar senha</a>`;
+  <a href="${APP_ANGULAR}/forgot-password/new?email=${email}&code=${code}">Recuperar senha</a>`;
 
     const mailOptions = {
       from: "filipe.biscolo@gmail.com",

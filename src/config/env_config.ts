@@ -16,3 +16,4 @@ dotenv.config({ path: path });
 
 export const JWT_SECRET = process.env.JWT_SECRET as string;
 export const G_CLIENT = process.env.G_CLIENT as string;
+export const APP_ANGULAR = process.env.APP_ANGULAR as string;
