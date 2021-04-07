@@ -1,10 +1,10 @@
 {
     "type": "mysql",
-    "host": "localhost",
+    "host": "us-cdbr-east-03.cleardb.com",
     "port": 3306,
-    "username": "admin",
-    "password": "admin",
-    "database": "backrocket",
+    "username": "bbbaf4862ce070",
+    "password": "303eea4f",
+    "database": "heroku_4cf07905df6642c",
     "migrations": [
         "./src/database/migrations/*.ts"
     ],

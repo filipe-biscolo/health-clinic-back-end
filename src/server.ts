@@ -1,5 +1,4 @@
 import express from "express";
-import path from 'path';
 import cors from 'cors';
 import 'express-async-errors';
 
@@ -16,4 +15,4 @@ app.use(express.json());
 app.use(routes);
 app.use(errorHandler);
 
-app.listen(3333);
+app.listen(3000);
