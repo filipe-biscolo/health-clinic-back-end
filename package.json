@@ -23,7 +23,8 @@
     "mysql2": "^2.2.5",
     "nodemailer": "^6.5.0",
     "typeorm": "^0.2.31",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "ts-node-dev": "^1.1.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
