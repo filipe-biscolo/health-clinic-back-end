@@ -37,7 +37,7 @@ export default {
       relations: ["occupation"],
     });
 
-    const permission = professional.occupation.permissions ? professional.occupation.permissions : 'HP';
+    const permission = professional?.occupation?.permissions ? professional.occupation.permissions : 'HP';
     const token = jwt.sign({ id: user.id, clinic_id: user.clinic_id, professional_id: professional.id, admin: professional.admin, permissions: permission}, JWT_SECRET, { expiresIn: "1d" });
     return response.status(200).json({ user: usersView.render(user), token });
   },
@@ -70,7 +70,7 @@ export default {
       where: { user_id: user.id },
       relations: ["occupation"],
     });
-    const permission = professional.occupation.permissions ? professional.occupation.permissions : 'HP';
+    const permission = professional?.occupation?.permissions ? professional.occupation.permissions : 'HP';
     const token = jwt.sign( {id: user.id, clinic_id: user.clinic_id, professional_id: professional.id, admin: professional.admin, permissions: permission }, JWT_SECRET, { expiresIn: "1d" });
 
     const dataInfo = {
