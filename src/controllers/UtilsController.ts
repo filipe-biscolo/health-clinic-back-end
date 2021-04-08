@@ -18,7 +18,7 @@ export default {
 
     const professional = await professionalRepository.findOneOrFail({
       where: { clinic_id: clinic_id, user_id: id },
-      relations: ["person", "occupation"]
+      relations: ["person"]
     });
 
     const dataInfo = {
@@ -26,7 +26,6 @@ export default {
       message: 'Dados do usuário!',
       data: {
         user_name: professional.person.name,
-        permissions: professional.occupation.permissions,
         clinic_name: clinic.fantasy_name
       }
     };
