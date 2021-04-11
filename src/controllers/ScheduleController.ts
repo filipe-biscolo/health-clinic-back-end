@@ -193,8 +193,8 @@ export default {
       health_insurance_id,
       has_health_insurance,
       scheduling_status,
-      date_hour: new Date(date_hour).toISOString(),
-      date_hour_end: new Date(date_hour_end).toISOString(),
+      date_hour: new Date(date_hour).toUTCString(),
+      date_hour_end: new Date(date_hour_end).toUTCString(),
     };
     
     const scheduling = schedulingRepository.create(data);
