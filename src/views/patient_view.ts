@@ -15,5 +15,5 @@ export default {
 
   renderMany(patients: PatientAllRelations[]) {
     return patients.map((patient) => this.render(patient));
-  },
+  }
 };

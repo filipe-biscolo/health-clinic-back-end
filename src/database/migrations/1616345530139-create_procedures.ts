@@ -28,11 +28,6 @@ export class createProcedures1616345530139 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: "deleted",
-            type: "boolean",
-            default: false,
-          },
-          {
             name: "created_at",
             type: "datetime",
             default: "now()",

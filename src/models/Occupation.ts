@@ -6,7 +6,7 @@ export enum Permissions {
 };
 
 @Entity("occupations")
-export default class Occupation {
+export class Occupation {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 

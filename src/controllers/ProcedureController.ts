@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import Procedure from "../models/Procedure";
+import exportView from "../views/export_view";
 
 export default {
   async index(request: Request, response: Response) {
@@ -41,6 +42,18 @@ export default {
     });
 
     return response.json(procedures);
+  },
+
+  async indexExport(request: Request, response: Response) {
+    const { clinic_id } = request.query;
+    
+    const procedureRepository = getRepository(Procedure);
+
+    const procedures = await procedureRepository.find({
+      where: { clinic_id: clinic_id }
+    });
+
+    return response.json(exportView.renderManyProcedures(procedures));
   },
 
   async show(request: Request, response: Response) {
@@ -118,16 +131,20 @@ export default {
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
-
+    let err;
     const procedureRepository = getRepository(Procedure);
 
     const procedure = await procedureRepository.findOneOrFail(id);
 
-    await procedureRepository.remove(procedure);
+    try {
+      await procedureRepository.remove(procedure);
+    } catch (error) {
+      err = error;
+    }
 
     const dataInfo = {
-      status: true,
-      message: 'Procedimento excluido com sucesso!'
+      status: !err ? true : false,
+      message: !err ? "Procedimento excluido com sucesso!" : "Convênio em uso, não é possível excluí-lo"
     };
 
     return response.json(dataInfo);

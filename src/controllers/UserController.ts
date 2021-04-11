@@ -12,13 +12,9 @@ import { JWT_SECRET, APP_ANGULAR } from "../config/env_config";
 
 import * as nodemailer from "nodemailer";
 import config from "../config/mail_config";
-import { OAuth2Client } from "google-auth-library";
 import UserQueue from "../models/UserQueue";
 import jwt_decode from "jwt-decode";
-
-const client = new OAuth2Client(
-  "1047440820874-acsaelv1lfoif3d3pf205rjc6q96cq1f.apps.googleusercontent.com"
-);
+import { Occupation, Permissions } from "../models/Occupation";
 
 export default {
   async store(request: Request, response: Response) {
@@ -68,14 +64,24 @@ export default {
 
     const clinic = clinicRepository.create(clinicData);
     const __clinic = await clinicRepository.save(clinic);
+        
+    const occupationData = {
+      name: 'Cargo inicial (Edite esse cargo)',
+      permissions: Permissions.HP,
+      clinic_id: __clinic.id
+    };
+    
+    const occupationRepository = getRepository(Occupation);
+    const occupation = occupationRepository.create(occupationData);
+    const __occupation = await occupationRepository.save(occupation);
 
     const professionalRepository = getRepository(Professional);
-
     type === "social" && (password = Math.random().toString(36).slice(-8));
 
     const data = {
       admin: true,
       clinic_id: __clinic.id,
+      occupation_id: __occupation.id,
       person,
       user: {
         clinic_id: __clinic.id,
@@ -157,7 +163,6 @@ export default {
     const { email } = request.body;
 
     const userExists = await usersRepository.findOne({ where: { email } });
-
     if (!userExists) {
       return response
         .status(404)

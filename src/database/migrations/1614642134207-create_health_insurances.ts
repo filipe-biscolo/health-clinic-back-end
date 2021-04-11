@@ -23,11 +23,6 @@ export class createHealthInsurances1614642134207 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: "deleted",
-            type: "boolean",
-            default: false,
-          },
-          {
             name: "created_at",
             type: "datetime",
             default: "now()",

@@ -24,11 +24,6 @@ export class createProfessionalHealthInsurances1617475943733
             isNullable: false,
           },
           {
-            name: "deleted",
-            type: "boolean",
-            default: false,
-          },
-          {
             name: "created_at",
             type: "datetime",
             default: "now()",

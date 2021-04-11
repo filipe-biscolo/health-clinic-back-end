@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import Person from "../models/Person";
-import { Professional, ProfessionalAllRelations } from "../models/Professional";
+import { Person } from "../models/Person";
+import { Professional, ProfessionalAllRelations, ProfessionalExport } from "../models/Professional";
+import { Permissions } from "../models/Occupation";
 import { ProfessionalHealthInsurance, ProfessionalHealthInsuranceBase, ProfessionalHealthInsuranceBasic } from "../models/ProfessionalHealthInsurance";
 // import ProfessionalHealthInsurance  from "../models/ProfessionalHealthInsurance";
 import professionalView from "../views/professional_view";
 import professionalHIView from "../views/professional_hi_view";
+import exportView from "../views/export_view";
+import User from "../models/User";
 
 export default {
   async index(request: Request, response: Response) {
@@ -52,6 +55,43 @@ export default {
     return response.json(professionals);
   },
 
+  async indexExport(request: Request, response: Response) {
+    const { clinic_id } = request.query;
+    
+    const professionalRepository = getRepository(ProfessionalExport);
+
+    const professionals =
+    await professionalRepository.createQueryBuilder("professionals")
+    .leftJoinAndSelect("professionals.user", "user")
+    .leftJoinAndSelect("professionals.person", "person")
+    .leftJoinAndSelect("person.city", "city")
+    .leftJoinAndSelect("person.state", "state")
+    .leftJoinAndSelect("professionals.health_insurances", "health_insurances")
+    .leftJoinAndSelect("health_insurances.health_insurance", "health_insurance")
+    .leftJoinAndSelect("professionals.occupation", "occupation")
+    .where("professionals.clinic_id = :clinic_id", { clinic_id: clinic_id })
+    .getMany();
+
+    return response.json(exportView.renderManyProfessionals(professionals));
+  },
+
+  async indexSchedule(request: Request, response: Response) {
+    const { clinic_id } = request.query;
+    
+    const professionalRepository = getRepository(ProfessionalAllRelations);
+
+    const professionals =
+    await professionalRepository.createQueryBuilder("professionals")
+    .leftJoinAndSelect("professionals.person", "person")
+    .leftJoinAndSelect("professionals.health_insurances", "health_insurances")
+    .leftJoinAndSelect("professionals.occupation", "occupation")
+    .where("professionals.clinic_id = :clinic_id", { clinic_id: clinic_id })
+    .andWhere("occupation.permissions = :permissions", { permissions: Permissions.HP })
+    .getMany();
+    
+    return response.json(professionalView.renderManySchedule(professionals));
+  },
+
   async show(request: Request, response: Response) {
     const { clinic_id } = request.query;
     const { id } = request.params;
@@ -78,6 +118,15 @@ export default {
     } = request.body;
 
     const professionalRepository = getRepository(Professional);
+    const usersRepository = getRepository(User);
+
+    const userExists = await usersRepository.findOne({ where: { email: user.email } });
+
+    if (userExists) {
+      return response
+        .status(409)
+        .json({ message: "Já existe um usuário com esse e-mail cadastrado!", type: "USER" });
+    }
     
     const data = {
       occupation_id,
@@ -129,20 +178,35 @@ export default {
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
-
+    let err;
     const professionalRepository = getRepository(Professional);
     const personRepository = getRepository(Person);
+    const userRepository = getRepository(User);
 
     const professional = await professionalRepository.findOneOrFail(id, {
-      relations: ["person"],
+      relations: ["person", "user"],
     });
 
     const person = await personRepository.findOneOrFail(professional.person.id);
+    const user = await userRepository.findOneOrFail(professional.user.id);
 
-    await professionalRepository.remove(professional);
-    await personRepository.remove(person);
+    try {
+      await professionalRepository.remove(professional);
+    } catch (error) {
+      err = error;
+    }
 
-    return response.json(professional);
+    if(!err) {
+      await personRepository.remove(person);
+      await userRepository.remove(user);
+    }
+
+    const dataInfo = {
+      status: !err ? true : false,
+      message: !err ? "Profissional excluido com sucesso!" : "Profissional com ligações, não é possível excluí-lo"
+    };
+
+    return response.json(dataInfo);
   },
 
   async indexHI(request: Request, response: Response) {
@@ -175,10 +239,17 @@ export default {
 
   async createHI(request: Request, response: Response) {
     const professional = request.body;
-    const health_insurance_id = professional.health_insurance_id;
-    console.log('health_insurance_id', health_insurance_id)
+    const health_insurance_id = request.query.health_insurance_id as string;
 
     const professionalHIRepository = getRepository(ProfessionalHealthInsurance);
+
+    const userExists = await professionalHIRepository.findOne({ where: { health_insurance_id, professional: { id: professional.id} } });
+
+    if (userExists) {
+      return response
+        .status(409)
+        .json({ message: "Convênio já está cadastrado para este profissional!" });
+    }
     
     const data = {
       health_insurance_id,

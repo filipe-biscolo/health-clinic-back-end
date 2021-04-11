@@ -37,8 +37,6 @@ export default {
         type: "QUEUE",
       });
     }
-    console.log('JWT_SECRET',JWT_SECRET)
-    console.log('G_CLIENT',G_CLIENT)
     const code = jwt.sign({ email: email, type: "mail" }, JWT_SECRET, {
       expiresIn: "1d",
     });

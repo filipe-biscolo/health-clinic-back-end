@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import Occupation from "../models/Occupation";
+import { Occupation } from "../models/Occupation";
+import exportView from "../views/export_view";
 
 export default {
   async index(request: Request, response: Response) {
@@ -41,6 +42,18 @@ export default {
     });
 
     return response.json(occupations);
+  },
+
+  async indexExport(request: Request, response: Response) {
+    const { clinic_id } = request.query;
+    
+    const occupationRepository = getRepository(Occupation);
+
+    const occupations = await occupationRepository.find({
+      where: { clinic_id: clinic_id }
+    });
+
+    return response.json(exportView.renderOccupations(occupations));
   },
 
   async show(request: Request, response: Response) {
@@ -118,16 +131,21 @@ export default {
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
+    let err;
 
     const occupationRepository = getRepository(Occupation);
 
     const occupation = await occupationRepository.findOneOrFail(id);
 
-    await occupationRepository.remove(occupation);
+    try {
+      await occupationRepository.remove(occupation);
+    } catch (error) {
+      err = error;
+    }
 
     const dataInfo = {
-      status: true,
-      message: 'Cargo excluido com sucesso!'
+      status: !err ? true : false,
+      message: !err ? "Cargo excluido com sucesso!" : "Cargo em uso, não é possível excluí-lo"
     };
 
     return response.json(dataInfo);

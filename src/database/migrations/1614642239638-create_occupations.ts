@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class createOccupations1615854866850 implements MigrationInterface {
+export class createOccupations1614642239638 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -27,11 +27,6 @@ export class createOccupations1615854866850 implements MigrationInterface {
             type: 'enum',
             enum: ['HP', 'SE'],
             isNullable: false,
-          },
-          {
-            name: "deleted",
-            type: "boolean",
-            default: false,
           },
           {
             name: "created_at",

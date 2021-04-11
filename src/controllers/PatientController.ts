@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { Patient, PatientAllRelations} from "../models/Patient";
-import * as Yup from "yup";
-import Person from "../models/Person";
-
+import { Person } from "../models/Person";
+import exportView from "../views/export_view";
 import patientView from "../views/patient_view";
 
 export default {
@@ -51,29 +50,18 @@ export default {
     return response.json(patients);
   },
 
-  // async indexPaginate(request: Request, response: Response) {
-  //   const { clinic_id } = request.query;
-  //   const page = Number(request.query.page);
-  //   const limit = Number(request.query.limit);
+  async indexExport(request: Request, response: Response) {
+    const { clinic_id } = request.query;
     
-  //   const patientRepository = getRepository(Patient);
+    const patientRepository = getRepository(PatientAllRelations);
 
-  //   const [patients, count ] = await patientRepository.findAndCount(
-  //     {
-  //       relations: ["person"],
-  //       where: { clinic_id: clinic_id },
-  //       skip: page,
-  //       take: limit
-  //     }
-  //   );
+    const patients = await patientRepository.find({
+      where: { clinic_id: clinic_id },
+      relations: ["person", "person.city", "person.state", "health_insurance"],
+    });
 
-  //   let patients = await patientRepository.createQueryBuilder('user')
-  //   .where({ clinic_id: clinic_id })
-  //   .relation(Person, 'person')
-  //   .paginate();
-
-  //   return response.json(patients);
-  // },
+    return response.json(exportView.renderManyPatients(patients));
+  },
 
   async show(request: Request, response: Response) {
     const { clinic_id } = request.query;
@@ -152,6 +140,7 @@ export default {
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
+    let err;
 
     const patientRepository = getRepository(Patient);
     const personRepository = getRepository(Person);
@@ -161,10 +150,22 @@ export default {
     });
 
     const person = await personRepository.findOneOrFail(patient.person.id);
+    
+    try {
+      await patientRepository.remove(patient);
+    } catch (error) {
+      err = error;
+    }
 
-    await patientRepository.remove(patient);
-    await personRepository.remove(person);
+    if(!err) {
+      await personRepository.remove(person);
+    }
 
-    return response.json(patient);
+    const dataInfo = {
+      status: !err ? true : false,
+      message: !err ? "Paciente excluido com sucesso!" : "Paciente com ligações, não é possível excluí-lo"
+    };
+
+    return response.json(dataInfo);
   },
 };

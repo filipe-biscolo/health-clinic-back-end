@@ -44,7 +44,8 @@ export class createSchedule1616963477562 implements MigrationInterface {
           },
           {
             name: "scheduling_status",
-            type: "varchar",
+            type: "enum",
+            enum: ['SCHEDULED', 'CONFIRMED', 'CANCELED', 'FINISHED'],
             isNullable: false,
           },
           {
@@ -56,11 +57,6 @@ export class createSchedule1616963477562 implements MigrationInterface {
             name: "date_hour_end",
             type: "datetime",
             isNullable: false,
-          },
-          {
-            name: "deleted",
-            type: "boolean",
-            default: false,
           },
           {
             name: "created_at",

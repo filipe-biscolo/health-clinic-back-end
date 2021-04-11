@@ -25,12 +25,7 @@ export class createUsers1614616123589 implements MigrationInterface {
           {
             name: "password",
             type: "varchar(100)",
-          },
-          {
-            name: "deleted",
-            type: "boolean",
-            default: false,
-          },
+          }
         ],
         foreignKeys: [
           {

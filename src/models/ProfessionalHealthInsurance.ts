@@ -35,6 +35,20 @@ export class ProfessionalHealthInsurance {
 }
 
 @Entity("professional_health_insurances")
+export class ProfessionalHealthInsuranceAllRelations {
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @OneToOne(() => HealthInsurance)
+  @JoinColumn({ name: 'health_insurance_id'})
+  health_insurance: HealthInsurance;
+
+  @ManyToOne(() => Professional, (professional) => professional.health_insurances)
+  @JoinColumn({ name: "professional_id" })
+  professional: Professional;
+}
+
+@Entity("professional_health_insurances")
 export class ProfessionalHealthInsuranceBase {
   @PrimaryGeneratedColumn("uuid")
   id: string;

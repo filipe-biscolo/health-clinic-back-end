@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class createProfessionals1614642239638 implements MigrationInterface {
+export class createProfessionals1615512032911 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -43,11 +43,6 @@ export class createProfessionals1614642239638 implements MigrationInterface {
             default: false,
           },
           {
-            name: "deleted",
-            type: "boolean",
-            default: false,
-          },
-          {
             name: "created_at",
             type: "datetime",
             default: "now()",
@@ -81,6 +76,12 @@ export class createProfessionals1614642239638 implements MigrationInterface {
             referencedColumnNames: ["id"],
             onUpdate: "CASCADE",
             onDelete: "CASCADE",
+          },
+          {
+            name: "ProOccupData",
+            columnNames: ["occupation_id"],
+            referencedTableName: "occupations",
+            referencedColumnNames: ["id"],
           },
         ],
       })

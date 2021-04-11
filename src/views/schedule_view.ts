@@ -1,4 +1,4 @@
-import Schedule from "../models/Schedule";
+import { Schedule } from "../models/Schedule";
 
 export default {
   render(schedule: Schedule) {
@@ -9,6 +9,7 @@ export default {
       has_health_insurance: schedule.has_health_insurance,
       health_insurance_name: schedule?.health_insurance?.name,
       date_hour: schedule.date_hour,
+      date_hour_end: schedule.date_hour_end,
       patient_id: schedule.patient.id,
       patient_name: schedule.patient.person.name,
       professional_id: schedule.professional.id,

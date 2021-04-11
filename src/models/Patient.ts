@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
 import HealthInsurance from "./HealthInsurance";
-import Person from "./Person";
+import {Person, PersonAllRelations} from "./Person";
 
 @Entity("patients")
 export class Patient {
@@ -60,7 +60,7 @@ export class PatientAllRelations {
   @JoinColumn({ name: 'health_insurance_id'})
   health_insurance: HealthInsurance;
 
-  @OneToOne(() => Person, { cascade: ['insert', 'update'], onDelete: 'CASCADE'} )
+  @OneToOne(() => PersonAllRelations, { cascade: ['insert', 'update'], onDelete: 'CASCADE'} )
   @JoinColumn({ name: 'person_id'})
-  person: Person;
+  person: PersonAllRelations;
 }

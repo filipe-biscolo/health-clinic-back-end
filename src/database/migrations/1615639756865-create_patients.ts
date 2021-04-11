@@ -43,11 +43,6 @@ export class createPatients1615639756865 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: "deleted",
-            type: "boolean",
-            default: false,
-          },
-          {
             name: "created_at",
             type: "datetime",
             default: "now()",

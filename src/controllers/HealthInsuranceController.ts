@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import HealthInsurance from "../models/HealthInsurance";
+import exportView from "../views/export_view";
 
 export default {
   async index(request: Request, response: Response) {
@@ -41,6 +42,18 @@ export default {
     });
 
     return response.json(healthInsurances);
+  },
+
+  async indexExport(request: Request, response: Response) {
+    const { clinic_id } = request.query;
+
+    const hiRepository = getRepository(HealthInsurance);
+
+    const healthInsurances = await hiRepository.find({
+      where: { clinic_id: clinic_id },
+    });
+
+    return response.json(exportView.renderManyHealthInsurances(healthInsurances));
   },
   
   async show(request: Request, response: Response) {
@@ -112,16 +125,21 @@ export default {
 
   async delete(request: Request, response: Response) {
     const { id } = request.params;
+    let err;
 
     const hiRepository = getRepository(HealthInsurance);
 
     const healthInsurance = await hiRepository.findOneOrFail(id);
-
-    await hiRepository.remove(healthInsurance);
+    
+    try {
+      await hiRepository.remove(healthInsurance);
+    } catch (error) {
+      err = error;
+    }
 
     const dataInfo = {
-      status: true,
-      message: "Convênio excluido com sucesso!",
+      status: !err ? true : false,
+      message: !err ? "Convênio excluido com sucesso!" : "Convênio em uso, não é possível excluí-lo",
     };
 
     return response.json(dataInfo);

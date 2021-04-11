@@ -10,4 +10,7 @@ export default class HealthInsurance {
 
   @Column()
   name: string;
+
+  @Column()
+  created_at: Date;
 }
