@@ -166,7 +166,7 @@ export default {
         clinic_id: clinic_id,
         professional_id: professional_id,
         scheduling_status: Not('CANCELED'),
-        date_hour: Between(new Date(date_hour).toISOString(), new Date(date_hour_end).toISOString()),
+        date_hour: Between(new Date(date_hour + '-03:00'), new Date(date_hour_end + '-03:00')),
       },
     });
 
@@ -176,7 +176,7 @@ export default {
           clinic_id: clinic_id,
         professional_id: professional_id,
         scheduling_status: Not('CANCELED'),
-        date_hour_end: Between(new Date(date_hour).toISOString(), new Date(date_hour_end).toISOString()),
+        date_hour_end: Between(new Date(date_hour + '-03:00'), new Date(date_hour_end + '-03:00')),
         },
       });
     }
@@ -184,7 +184,7 @@ export default {
     if (schedule && schedule.length > 0) {
       return response.status(409).json({ message: "Horário indisponível!" });
     }
-
+    console.log('new Date(date_hour)', new Date(date_hour + '-03:00'))
     const data = {
       clinic_id,
       patient_id,
@@ -193,15 +193,15 @@ export default {
       health_insurance_id,
       has_health_insurance,
       scheduling_status,
-      date_hour: new Date(date_hour.setHours(new Date(date_hour).getHours() + 3 )),
-      date_hour_end: new Date(date_hour_end.setHours(new Date(date_hour_end).getHours() + 3 ))
+      date_hour: new Date(date_hour + '-03:00'),
+      date_hour_end: new Date(date_hour_end + '-03:00')
     };
     
     const scheduling = schedulingRepository.create(data);
 
     await schedulingRepository.save(scheduling);
 
-    return response.status(201).json(scheduling);
+    return response.status(201).json('scheduling');
   },
 
   async update(request: Request, response: Response) {
