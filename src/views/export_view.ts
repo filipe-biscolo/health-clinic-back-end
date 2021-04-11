@@ -1,12 +1,9 @@
 import { AttendanceAllRelations } from "../models/Attendance";
 import HealthInsurance from "../models/HealthInsurance";
-import Occupation from "../models/Occupation";
+import { Occupation } from "../models/Occupation";
 import { PatientAllRelations } from "../models/Patient";
 import Procedure from "../models/Procedure";
-import {
-  ProfessionalAllRelations,
-  ProfessionalExport,
-} from "../models/Professional";
+import { ProfessionalExport } from "../models/Professional";
 import { ScheduleAllRelations } from "../models/Schedule";
 
 enum Sex {
@@ -123,26 +120,26 @@ export default {
   },
 
   renderManyPatients(patients: PatientAllRelations[]) {
-    return patients.map((patient) =>
-      this.renderPatient(patient)
-    );
+    return patients.map((patient) => this.renderPatient(patient));
   },
-  
+
   renderScheduling(scheduling: ScheduleAllRelations) {
     return {
       scheduling_status: SchedulingStatus[scheduling.scheduling_status],
-      has_health_insurance: scheduling.has_health_insurance ? 'Sim': 'Não',
-      health_insurance_name: scheduling?.health_insurance?.name ? scheduling?.health_insurance?.name : 'Particular',
+      has_health_insurance: scheduling.has_health_insurance ? "Sim" : "Não",
+      health_insurance_name: scheduling?.health_insurance?.name
+        ? scheduling?.health_insurance?.name
+        : "Particular",
       date_hour: this.dateHour(scheduling.date_hour),
       date_hour_end: this.dateHour(scheduling.date_hour_end),
       patient_name: scheduling.patient.person.name,
       professional_name: scheduling.professional.person.name,
-      procedure_name: scheduling?.procedure?.name
+      procedure_name: scheduling?.procedure?.name,
     };
   },
 
   renderManySchedulings(schedulings: ScheduleAllRelations[]) {
-    return schedulings.map(scheduling => this.renderScheduling(scheduling));
+    return schedulings.map((scheduling) => this.renderScheduling(scheduling));
   },
 
   renderAttendance(attendance: AttendanceAllRelations) {
@@ -150,14 +147,16 @@ export default {
       patient_name: attendance.scheduling.patient?.person?.name,
       professional_name: attendance.scheduling?.professional?.person?.name,
       procedure_name: attendance.scheduling?.procedure?.name,
-      health_insurance_name: attendance?.scheduling?.health_insurance?.name ? attendance?.scheduling?.health_insurance?.name : 'Particular',
+      health_insurance_name: attendance?.scheduling?.health_insurance?.name
+        ? attendance?.scheduling?.health_insurance?.name
+        : "Particular",
       date_hour: this.dateHour(attendance.scheduling?.date_hour),
-      date_hour_end_attendance: this.dateHour(attendance.created_at)
+      date_hour_end_attendance: this.dateHour(attendance.created_at),
     };
   },
 
   renderManyAttendances(attendances: AttendanceAllRelations[]) {
-    return attendances.map(attendance => this.renderAttendance(attendance));
+    return attendances.map((attendance) => this.renderAttendance(attendance));
   },
 
   arrayToString(array: any) {
@@ -183,13 +182,13 @@ export default {
 
   birthDate(value: string) {
     if (value) {
-      return new Date(value+'T00:00').toLocaleDateString('pt-br');
+      return new Date(value + "T00:00").toLocaleDateString("pt-br");
     }
   },
 
   dateHour(value: Date) {
     if (value) {
-      return new Date(value).toLocaleString('pt-br');
+      return new Date(value + "-03:00").toLocaleString("pt-br");
     }
   },
 };
