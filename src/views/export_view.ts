@@ -188,7 +188,7 @@ export default {
 
   dateHour(value: Date) {
     if (value) {
-      return new Date(value + "-03:00").toLocaleString("pt-br");
+      return new Date(value.setHours(value.getHours() - 3)).toLocaleString("pt-br");
     }
   },
 };
