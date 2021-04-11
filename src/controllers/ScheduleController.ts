@@ -230,7 +230,7 @@ export default {
         id: Not(id),
         clinic_id: data.clinic_id,
         professional_id: data.professional_id,
-        date_hour: Between(new Date(data.date_hour).toISOString(), new Date(data.date_hour_end).toISOString()),
+        date_hour: Between(new Date(data.date_hour + '-03:00'), new Date(data.date_hour_end + '-03:00')),
       },
     });
     
@@ -240,7 +240,7 @@ export default {
           id: Not(id),
           clinic_id: data.clinic_id,
           professional_id: data.professional_id,
-          date_hour_end: Between(new Date(data.date_hour).toISOString(), new Date(data.date_hour_end).toISOString()),
+          date_hour_end: Between(new Date(data.date_hour + '-03:00'), new Date(data.date_hour_end + '-03:00')),
         },
       });
     }
@@ -256,8 +256,8 @@ export default {
     scheduling.health_insurance_id = data.health_insurance_id;
     scheduling.has_health_insurance = data.has_health_insurance;
     scheduling.scheduling_status = data.scheduling_status;
-    scheduling.date_hour = new Date(new Date(data.date_hour).toISOString());
-    scheduling.date_hour_end = new Date(new Date(data.date_hour_end).toISOString());
+    scheduling.date_hour = new Date(data.date_hour + '-03:00');
+    scheduling.date_hour_end = new Date(data.date_hour_end + '-03:00');
 
     const __scheduling = await schedulingRepository.save(scheduling);
 
