@@ -193,8 +193,8 @@ export default {
       health_insurance_id,
       has_health_insurance,
       scheduling_status,
-      date_hour,
-      date_hour_end,
+      date_hour: new Date(date_hour).toISOString(),
+      date_hour_end: new Date(date_hour_end).toISOString(),
     };
     
     const scheduling = schedulingRepository.create(data);
@@ -256,8 +256,8 @@ export default {
     scheduling.health_insurance_id = data.health_insurance_id;
     scheduling.has_health_insurance = data.has_health_insurance;
     scheduling.scheduling_status = data.scheduling_status;
-    scheduling.date_hour = data.date_hour;
-    scheduling.date_hour_end = data.date_hour_end;
+    scheduling.date_hour = new Date(new Date(data.date_hour).toISOString());
+    scheduling.date_hour_end = new Date(new Date(data.date_hour_end).toISOString());
 
     const __scheduling = await schedulingRepository.save(scheduling);
 
