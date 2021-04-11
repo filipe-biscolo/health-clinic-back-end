@@ -5,7 +5,7 @@
     "username": "bbbaf4862ce070",
     "password": "303eea4f",
     "database": "heroku_4cf07905df6642c",
-    "timezone": "-3",
+    "timezone": "+3",
     "migrations": [
         "./src/database/migrations/*.ts"
     ],
