@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import Clinic from "../models/Clinic";
-import Occupation from "../models/Occupation";
+import { Occupation } from "../models/Occupation";
 import { ProfessionalBasic } from "../models/Professional";
 
 export default {

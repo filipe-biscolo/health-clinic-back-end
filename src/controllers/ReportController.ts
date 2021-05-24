@@ -63,10 +63,10 @@ export default {
     .addSelect("COUNT(*) AS count")
     .groupBy("schedule.professional")
     .where('schedule.clinic_id = :clinic_id', { clinic_id })
-    .where('occupation.permissions = :permissions', { permissions: 'HP' })
+    .andWhere('occupation.permissions = :permissions', { permissions: 'HP' })
     .andWhere("schedule.date_hour BETWEEN :begin AND :end", {begin: date_start, end: date_end })
     .getRawMany();
-
+    
     return response.json(reportView.renderProfessionalMany(report));
   },
 
